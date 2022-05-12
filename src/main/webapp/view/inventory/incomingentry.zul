@@ -1,0 +1,221 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.IncomingEntryVm')"
+		validationMessages="@id('vmsgs')">
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<div class="card">
+			<div class="card-header">
+				<n:h4>
+					<n:b>Entri Incoming</n:b>
+				</n:h4>
+				<label value="@load(vm.productgroup)"
+					style="font-size: 16px" />
+			</div>
+			<div class="card-body"
+				form="@id('e') @load(vm.objForm) @save(vm.objForm, before='doSave') @validator(vm.validator)">
+				<groupbox mold="3d">
+					<caption label="Form Incoming" />
+					<grid>
+						<columns>
+							<column width="200px" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label value="Incoming Id" />
+								<textbox value="Auto Generated"
+									cols="30" readonly="true" />
+							</row>
+							<row>
+								<label value="Tanggal Masuk" />
+								<hlayout>
+									<textbox
+										value="@bind(e.entrytime) @converter('formatedDate', format='dd, MMM yyyy')"
+										readonly="true" cols="30" />
+								</hlayout>
+							</row>
+							<row>
+								<hlayout>
+									<label value="Entri Tipe Produk" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<combobox id="cbTypeProduct"
+										model="@load(vm.mproducttypes)" cols="30"
+										selectedItem="@bind(e.mproducttype)">
+										<template name="model"
+											var="mproducttype">
+											<comboitem
+												label="@load(mproducttype.producttype)" />
+										</template>
+									</combobox>
+									<label style="color:red"
+										value="@load(vmsgs['mproducttype'])" />
+								</hlayout>
+							</row>
+							<row id="rowHarga" visible="false">
+								<hlayout>
+									<label value="Harga" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<textbox value="Rp." disabled="true"
+										cols="1" inplace="true" />
+									<decimalbox format="#,###"
+										value="@bind(e.harga)" cols="22" maxlength="17" />
+									<label style="color:red"
+										value="@load(vmsgs['harga'])" />
+								</hlayout>
+							</row>
+							<row id="rowStartno">
+								<hlayout>
+									<label value="Nomerator Awal" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<textbox placeholder="prefix"
+										value="@bind(vm.prefix)"
+										cols="5" maxlength="5" />
+									<intbox style="text-align:right" onChange="@command('doGetEndno')"
+										value="@bind(vm.startno)" cols="18" />
+									<label style="color:red"
+										value="@load(vmsgs['startno'])" />
+								</hlayout>
+							</row>
+							<row id="rowPinpad" visible="false">
+								<label value="Upload File Serial" />
+								<hlayout>
+									<button id="btnBrowse"
+										label="Browse File..." upload="true, maxsize=500000"
+										sclass="btn btn-default btn-sm"
+										onUpload="@command('doBrowse', upEvent=event)" />
+									<label id="fileBrowse"
+										value="@load(vm.filename)" />
+									<label style="color:red"
+										value="@load(vmsgs['filename'])" />
+								</hlayout>
+							</row>
+							<row>
+								<hlayout>
+									<label value="Jumlah" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<intbox id="quantity"
+										style="text-align:right" onChange="@command('doGetEndno')"
+										value="@bind(vm.totaldata)" cols="15" format="#,###" />
+									<combobox
+										selectedItem="@bind(vm.unit)" cols="9" disabled="true"
+										buttonVisible="false" inplace="true" autocomplete="true">
+										<comboitem value="04"
+											label="Lembar/Buku" />
+										<comboitem value="02"
+											label="Unit" />
+									</combobox>
+									<label style="color:red"
+										value="@load(vmsgs['itemqty'])" />
+								</hlayout>
+							</row>
+							<row id="rowEndno">
+								<label value="Nomerator Akhir" />
+								<hlayout>
+									<textbox placeholder="prefix" readonly="true"
+										value="@load(vm.prefix)" cols="5" maxlength="5" />
+									<textbox value="@load(vm.endno)"
+										cols="18" style="text-align:right" readonly="true" />
+								</hlayout>
+							</row>
+							<!-- <row id="rowBox">
+								<label value="Jumlah Box" />
+								<intbox value="@load()" />
+								</row> -->
+							<row>
+								<hlayout>
+									<label value="Lokasi" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<combobox id="cbCabang"
+										model="@load(vm.mbranchmodel)" cols="30"
+										selectedItem="@bind(e.mbranch)">
+										<template name="model"
+											var="mbranch">
+											<comboitem
+												label="@load(mbranch.branchname)" />
+										</template>
+									</combobox>
+									<label style="color:red"
+										value="@load(vmsgs['mbranch'])" />
+								</hlayout>
+							</row>
+							<row>
+								<hlayout>
+									<label value="Kontrak/SPK" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<textbox value="@bind(e.spkno)"
+										cols="30" />
+									<label style="color:red"
+										value="@load(vmsgs['spkno'])" />
+								</hlayout>
+							</row>
+							<row>
+								<hlayout>
+									<label value="Tanggal Kontrak" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<datebox cols="30"
+										value="@bind(e.spkdate)" format="dd, MMM yyyy" />
+									<label style="color:red"
+										value="@load(vmsgs['spkdate'])" />
+								</hlayout>
+							</row>
+							<row>
+								<hlayout>
+									<label value="Vendor" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<combobox id="cbVendor"
+										model="@load(vm.msupplier)" cols="30"
+										selectedItem="@bind(e.msupplier)">
+										<template name="model"
+											var="msupplier">
+											<comboitem
+												label="@load(msupplier.suppliername)" />
+										</template>
+									</combobox>
+									<label style="color:red"
+										value="@load(vmsgs['msupplier'])" />
+								</hlayout>
+							</row>
+							<!-- <row>
+								<label value="Upload Gambar" />
+								<vlayout>
+								<button id="btnBrowse"
+								label="Browse File..." upload="true, maxsize=500000"
+								sclass="btn btn-default btn-sm"
+								onUpload="@command('doBrowsePic', upEvent=event)" />
+								<label id="fileBrowse"
+								value="@load()" />
+								</vlayout>
+								</row> -->
+						</rows>
+					</grid>
+				</groupbox>
+				<separator />
+			</div>
+			<div class="card-footer">
+				<button id="btnSave" autodisable="self" label="Simpan"
+					sclass="btn btn-primary btn-sm" onClick="@command('doSave')" />
+			</div>
+		</div>
+	</window>
+</zk>

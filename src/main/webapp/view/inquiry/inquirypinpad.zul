@@ -1,0 +1,83 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.InquiryPinpadVm')"
+		validationMessages="@id('vmsgs')">
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<div class="card">
+			<div class="card-header">
+				<n:h3>
+					<n:b>Inquiry Data Pinpad</n:b>
+				</n:h3>
+			</div>
+			<div class="card-body">
+				<groupbox mold="3d">
+					<caption label="${labels.common.searching}"
+						image="/images/search.png" />
+					<grid>
+						<columns>
+							<column width="150px" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label value="Nomor Serial" />
+								<textbox value="@bind(vm.itemno)"
+									cols="20" maxlength="40" onOK="@command('doSearch')" />
+							</row>
+						</rows>
+						<foot>
+							<footer />
+							<footer>
+								<n:div class="btn-group" role="group">
+									<button
+										sclass="btn btn-default btn-sm"
+										label="${labels.common.search}"
+										onClick="@command('doSearch')" />
+									<button
+										sclass="btn btn-default btn-sm" label="${labels.common.reset}"
+										onClick="@command('doReset')" />
+								</n:div>
+							</footer>
+						</foot>
+					</grid>
+				</groupbox>
+				<div class="row">
+					<div class="col-md-10">
+						<paging id="paging" autohide="true" />
+					</div>
+					<div class="col-md-2" align="right">
+						<label value="Total Record :"
+							style="font-weight: bold" />
+						<label value="@load(vm.pageTotalSize)"
+							style="font-weight: bold" />
+					</div>
+				</div>
+				<grid id="grid"
+					emptyMessage="${labels.common.emptymsg}">
+					<columns>
+						<column label="${labels.common.no}"
+							align="right" width="40px" />
+						<column label="No. Serial" align="center"
+							width="180px" />
+						<!-- <column label="TID" align="center" width="100px" />
+							<column label="Tipe" align="center" width="90px" />
+						<column label="Incoming Id" align="center"
+							width="180px" />
+						<column label="Waktu Incoming" align="center"
+							width="150px" /> -->
+						<column label="Cabang" />
+						<column label="Status" align="center"
+							width="150px" />
+						<column label="Action" align="center"
+							width="150px"/>
+					</columns>
+				</grid>
+			</div>
+		</div>
+	</window>
+</zk>

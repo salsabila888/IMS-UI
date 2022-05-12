@@ -1,0 +1,80 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winOrderMemo" border="normal"
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.OrderMemoVm')">
+		<caption />
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<groupbox mold="3d">
+			<div class="card-header" id="divRoot">
+				<n:h3>
+					<n:b>Detail Memo</n:b>
+				</n:h3>
+				<label value="@load(vm.productgroup)"
+					style="font-size: 16px"/>
+			</div>
+			<grid>
+				<columns>
+					<column width="200px" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<label value="Nama Product" />
+						<label value="@load(vm.obj.mproduct.productname)" />
+					</row>
+					<row>
+						<label value="Order ID" />
+						<label
+							value="@load(vm.obj.orderid)" />
+					</row>
+					<row>
+						<label value="Order Date" />
+						<label
+							value="@load(vm.obj.orderdate) 
+							@converter('formatedDate', format='dd, MMM yyyy') "/>
+					</row>
+					<row>
+						<label value="Order Level" />
+						<label value="@load(vm.obj.orderlevel)" />
+					</row>		
+					<row>
+						<label value="Order Outlet" />
+						<label value="@load(vm.obj.orderoutlet)" />
+					</row>
+					<row>
+						<label value="Jumlah" />
+						<label value="@load(vm.obj.itemqty)" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+  		<separator />
+	  	<div class="row">
+			<div class="col-md-10">
+				<paging id="paging" autohide="true" />
+			</div>
+			<div class="col-md-2" align="right">
+				<label value="Total Record :" style="font-weight: bold" />
+				<label value="@load(vm.pageTotalSize)"
+					style="font-weight: bold" />
+			</div> 
+		</div> 
+		<grid id="grid" emptyMessage="${labels.common.emptymsg}">
+			<columns>
+				<column label="${labels.common.no}" align="right"
+					width="40px" />
+				<column label="Memo"  align="center"
+					/>
+				<column label="Memo By" align="center"
+					width="180px"/>	
+				<column label="Memo Date" align="center"
+					width="180px"/>	
+			</columns>
+		</grid>
+		<separator />
+	</window>
+</zk>

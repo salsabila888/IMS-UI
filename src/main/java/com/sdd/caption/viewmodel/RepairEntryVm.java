@@ -1,0 +1,310 @@
+package com.sdd.caption.viewmodel;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.zkoss.bind.BindUtils;
+import org.zkoss.bind.ValidationContext;
+import org.zkoss.bind.Validator;
+import org.zkoss.bind.annotation.AfterCompose;
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.bind.validator.AbstractValidator;
+import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Sessions;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.select.Selectors;
+import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Div;
+import org.zkoss.zul.Grid;
+import org.zkoss.zul.Label;
+import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Messagebox;
+import org.zkoss.zul.Row;
+import org.zkoss.zul.RowRenderer;
+
+import com.sdd.caption.dao.TcounterengineDAO;
+import com.sdd.caption.dao.TpinpaditemDAO;
+import com.sdd.caption.dao.TrepairDAO;
+import com.sdd.caption.dao.TrepairitemDAO;
+import com.sdd.caption.domain.Mproduct;
+import com.sdd.caption.domain.Muser;
+import com.sdd.caption.domain.Tpinpaditem;
+import com.sdd.caption.domain.Trepair;
+import com.sdd.caption.domain.Trepairitem;
+import com.sdd.caption.domain.Trepairmemo;
+import com.sdd.caption.utils.AppData;
+import com.sdd.caption.utils.AppUtils;
+import com.sdd.utils.db.StoreHibernateUtil;
+
+public class RepairEntryVm {
+
+	private org.zkoss.zk.ui.Session zkSession = Sessions.getCurrent();
+	private Muser oUser;
+
+	private Session session;
+	private Transaction transaction;
+
+	private Trepair objForm;
+	private Mproduct mproduct;
+	private TrepairDAO oDao = new TrepairDAO();
+
+	private List<Tpinpaditem> inList = new ArrayList<>();
+	private List<String> listData = new ArrayList<>();
+
+	private String unit;
+	private String itemno;
+	private String itemnoend;
+	private String memo;
+//	private String jenispinpad;
+	private Integer totaldata;
+
+	@Wire
+	private Row outlet;
+	@Wire
+	private Combobox cbProduct;
+	@Wire
+	private Grid grid;
+
+	@AfterCompose
+	@NotifyChange("*")
+	public void afterCompose(@ContextParam(ContextType.VIEW) Component view) throws Exception {
+		Selectors.wireComponents(view, this, false);
+		oUser = (Muser) zkSession.getAttribute("oUser");
+		doReset();
+
+		grid.setRowRenderer(new RowRenderer<Tpinpaditem>() {
+
+			@Override
+			public void render(final Row row, final Tpinpaditem data, int index) throws Exception {
+				row.getChildren().add(new Label(String.valueOf(index + 1)));
+				row.getChildren().add(new Label(data.getItemno()));
+				Button btn = new Button("Cancel");
+				btn.setAutodisable("self");
+				btn.setSclass("btn btn-danger btn-sm");
+				btn.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
+					@Override
+					public void onEvent(Event event) throws Exception {
+						Messagebox.show(Labels.getLabel("common.delete.confirm"), "Confirm Dialog",
+								Messagebox.OK | Messagebox.CANCEL, Messagebox.QUESTION, new EventListener<Event>() {
+
+									@Override
+									public void onEvent(Event event) throws Exception {
+										inList.remove(data);
+										listData.remove(data.getItemno().trim());
+										totaldata = totaldata - 1;
+										refresh();
+
+										BindUtils.postNotifyChange(null, null, RepairEntryVm.this, "totaldata");
+									}
+								});
+					}
+				});
+
+				Div div = new Div();
+				div.appendChild(btn);
+				row.getChildren().add(div);
+			}
+		});
+
+	}
+
+	@NotifyChange("*")
+	@Command
+	public void doRegister() {
+		try {
+			Tpinpaditem data = new TpinpaditemDAO().findByFilter(
+					"itemno = '" + itemno.trim() + "' and status = '" + AppUtils.STATUS_SERIALNO_OUTPRODUKSI + "'");
+
+			if (data != null) {
+				if (!listData.contains(data.getItemno().trim())) {
+					inList.add(data);
+					listData.add(data.getItemno().trim());
+					totaldata++;
+				}
+			} else {
+				Messagebox.show("Data tidak ditemukan.", "Info", Messagebox.OK, Messagebox.INFORMATION);
+			}
+
+			refresh();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Command
+	@NotifyChange("*")
+	public void doSave() {
+		if (inList.size() > 0) {
+			try {
+				session = StoreHibernateUtil.openSession();
+				transaction = session.beginTransaction();
+
+				objForm.setRegid(new TcounterengineDAO().generateCounter(AppUtils.ID_PINPAD_PRODUCTION));
+				objForm.setStatus(AppUtils.STATUS_RETUR_WAITAPPROVAL);
+				objForm.setItemqty(totaldata);
+				objForm.setMproduct(mproduct);
+				objForm.setInsertedby(oUser.getUsername());
+				oDao.save(session, objForm);
+
+				for (Tpinpaditem data : inList) {
+					Trepairitem objData = new Trepairitem();
+					objData.setItemno(data.getItemno());
+					objData.setItemstatus(AppUtils.STATUS_RETUR_WAITAPPROVAL);
+					objData.setTrepair(objForm);
+					new TrepairitemDAO().save(session, objData);
+
+					data.setStatus(AppUtils.STATUS_RETUR_WAITAPPROVAL);
+					new TpinpaditemDAO().save(session, data);
+				}
+
+				Trepairmemo objMemo = new Trepairmemo();
+				objMemo.setMemo(memo);
+				objMemo.setMemoby(oUser.getUsername());
+				objMemo.setMemotime(new Date());
+				objMemo.setTrepair(objForm);
+				new TrepairDAO().save(session, objForm);
+
+				transaction.commit();
+				session.close();
+
+				Clients.showNotification(Labels.getLabel("common.add.success"), "info", null, "middle_center", 5000);
+
+				doReset();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			Messagebox.show("Tidak ada data.", "Info", Messagebox.OK, Messagebox.INFORMATION);
+		}
+	}
+
+	@NotifyChange("*")
+	public void refresh() {
+		grid.setModel(new ListModelList<Tpinpaditem>(inList));
+	}
+
+	@NotifyChange("*")
+	public void doReset() {
+		objForm = new Trepair();
+		objForm.setInserttime(new Date());
+		objForm.setMbranch(oUser.getMbranch());
+		memo = "";
+		totaldata = 0;
+		itemno = "";
+		itemnoend = "";
+		inList = new ArrayList<Tpinpaditem>();
+		listData = new ArrayList<String>();
+		cbProduct.setValue(null);
+		mproduct = null;
+
+		unit = "02";
+		refresh();
+	}
+
+	public Validator getValidator() {
+		return new AbstractValidator() {
+
+			@Override
+			public void validate(ValidationContext ctx) {
+				try {
+					Mproduct mproduct = (Mproduct) ctx.getProperties("mproduct")[0].getValue();
+					if (mproduct == null)
+						this.addInvalidMessage(ctx, "mproduct", Labels.getLabel("common.validator.empty"));
+
+					if (memo == null || "".trim().equals(memo))
+						this.addInvalidMessage(ctx, "memo", Labels.getLabel("common.validator.empty"));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		};
+	}
+
+	public ListModelList<Mproduct> getMproductmodel() {
+		ListModelList<Mproduct> lm = null;
+		try {
+			lm = new ListModelList<Mproduct>(AppData.getMproduct("productgroup = '03'"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lm;
+	}
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+
+	public String getItemno() {
+		return itemno;
+	}
+
+	public void setItemno(String itemno) {
+		this.itemno = itemno;
+	}
+
+	public String getItemnoend() {
+		return itemnoend;
+	}
+
+	public void setItemnoend(String itemnoend) {
+		this.itemnoend = itemnoend;
+	}
+
+	public Trepair getObjForm() {
+		return objForm;
+	}
+
+	public void setObjForm(Trepair objForm) {
+		this.objForm = objForm;
+	}
+
+	public Integer getTotaldata() {
+		return totaldata;
+	}
+
+	public void setTotaldata(Integer totaldata) {
+		this.totaldata = totaldata;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public Mproduct getMproduct() {
+		return mproduct;
+	}
+
+	public void setMproduct(Mproduct mproduct) {
+		this.mproduct = mproduct;
+	}
+
+//	public String getJenispinpad() {
+//		return jenispinpad;
+//	}
+//
+//	public void setJenispinpad(String jenispinpad) {
+//		this.jenispinpad = jenispinpad;
+//	}
+	
+	
+}

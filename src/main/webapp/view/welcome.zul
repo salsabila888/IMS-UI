@@ -1,0 +1,26 @@
+<?page title="${desktop.webApp.appName}" contentType="text/html;charset=UTF-8"?>
+<zk xmlns:w="client" xmlns:n="native">
+	`<window id="winIndex">
+		<div
+			viewModel="@id('vm') @init('com.sdd.caption.viewmodel.IndexVm')">
+			<div class="row">
+				<div class="col-6" id="divStockEstimate">
+					<!-- <include id="incStockestimate" onClick="@command('doViewStockestimate')" 
+						src="/view/dashboard/chartstockestimate.zul?id=1" /> -->					
+				</div>
+				<div class="col-6" id="divOrdervsPerso">
+					<!-- <include id="incOrdervsperso" onClick="@command('doViewOrdervsperso')"
+						src="/view/dashboard/chartordervsperso.zul?id=3" /> -->
+				</div>
+				<div class="col-6" id="divPersovsdlv">
+					<!-- <include id="incPersovsdlv" onClick="@command('doViewPersovsdlv')"
+						src="/view/dashboard/chartpersovsdlv.zul?id=1" /> -->
+				</div>
+				<div class="col-6" id="divSlaorder">
+					<!-- <include id="incSlaorder" onClick="@command('doViewSlaorder')"
+						src="/view/dashboard/chartslaorder.zul?id=1" /> -->
+				</div>
+			</div>
+		</div>
+	</window>
+</zk>

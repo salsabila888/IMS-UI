@@ -1,0 +1,150 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.MproducttypeNonCardVm')"
+		validationMessages="@id('vmsgs')" sclass="win">
+		<caption label="Master Produk" />
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<div id="divForm" class="panel panel-default panel-sm">
+			<div class="panel-heading">
+				<n:h3 class="panel-title"><n:b>
+					<n:span class="glyphicon glyphicon-cog" />
+					Form Master Produk Non Kartu
+				</n:b></n:h3>
+			</div>
+			<div class="panel-body"
+				form="@id('e') @load(vm.objForm) @save(vm.objForm, before='save') @validator(vm.validator)">
+				<n:table class="table table-striped table-sm">									
+					<n:tr>
+						<n:td width="150px">Grup Produk</n:td>
+						<n:td>
+							<combobox id="cbProductgroup" cols="30" readonly="true"
+								selectedItem="@bind(e.productgroupcode)" onChange="@command('doProductgroupSelected', item=e.productgroupcode)">
+								<comboitem label="TOKEN"
+									value="02" />
+								<comboitem label="PINPAD"
+									value="03" />
+								<comboitem label="DOCUMENT"
+									value="04" />
+								<comboitem label="SUPPLIES"
+									value="05" />								
+							</combobox>
+							<label style="color:red"
+								value="@load(vmsgs['productgroupcode'])" />
+						</n:td>
+					</n:tr>
+					<n:tr>
+						<n:td>Nama Produk</n:td>
+						<n:td>
+							<textbox value="@bind(e.producttype)"
+								cols="37" maxlength="40" />
+							<label style="color:red"
+								value="@load(vmsgs['producttype'])" />
+						</n:td>
+					</n:tr>
+					<n:tr>
+						<n:td>Unit Produk</n:td>
+						<n:td>
+							<combobox id="cbProductunit" selectedItem="@bind(e.productunit)" cols="10" onChange="@command('doProductunitSelected', item=e.productunit)">
+								<comboitem value="P" label="PCS" />
+								<comboitem value="B" label="BOX" />
+							</combobox>
+						</n:td>
+					</n:tr>
+					<n:tr>
+						<n:td>Jumlah Per Unit</n:td>
+						<n:td>
+							<intbox id="ibProductunitqty" value="@bind(e.productunitqty)" cols="5" maxlength="5" />
+						</n:td>
+					</n:tr>
+					<n:tr>
+						<n:td>Stock</n:td>
+						<n:td>
+							<intbox value="@bind(e.laststock)" cols="7"
+								maxlength="7" readonly="true" />
+						</n:td>
+					</n:tr>
+					<n:tr>
+						<n:td>Pagu Stock</n:td>
+						<n:td>
+							<intbox value="@bind(e.stockmin)" cols="7"
+								maxlength="7" />
+						</n:td>
+					</n:tr>
+					<n:tr>
+						<n:td>Tipe Perhitungan SLA</n:td>
+						<n:td>
+							<radiogroup selectedItem="@bind(e.slacountertype)">
+								<radio value="D" label="Berdasarkan Tanggal Data" />
+								<separator orient="vertical" />
+								<radio value="P" label="Berdasarkan Tanggal Produksi" />
+							</radiogroup>
+						</n:td>
+					</n:tr>
+				</n:table>
+			</div>
+			<div class="panel-footer">
+				<n:div class="btn-group" role="group">
+					<button id="btnSave" sclass="btn btn-default btn-sm"
+						label="${labels.common.save}" onClick="@command('save')"
+						width="70px" />
+					<button id="btnCancel"
+						sclass="btn btn-default btn-sm" label="${labels.common.cancel}"
+						onClick="@command('cancel')" width="70px" />
+					<button id="btnDelete"
+						sclass="btn btn-default btn-sm" label="${labels.common.del}"
+						onClick="@command('delete')" width="70px" />
+				</n:div>
+			</div>			
+		</div>
+		<separator />
+		
+		<div class="row">
+				<div class="col-md-10">
+					<paging id="paging" autohide="true" />
+				</div>
+				<div class="col-md-2" align="right">
+					<label value="Total Record :" style="font-weight: bold" />
+					<label value="@load(vm.pageTotalSize)"
+						style="font-weight: bold" />
+				</div>
+			</div>
+			<listbox id="listbox"
+				emptyMessage="${labels.common.emptymsg}"
+				selectedItem="@bind(vm.objForm)">
+				<listhead>
+					<listheader label="${labels.common.no}"
+						align="right" width="40px" />
+					<listheader sort="auto(productgroupcode)" label="Grup Produk" width="120px">						
+						<!-- <combobox inplace="true" class="cheader" cols="15" placeholder="Grup Produk"
+								selectedItem="@bind(vm.productgroupcode)" onChange="@command('doSearch')">
+								<comboitem label="TOKEN"
+									value="02" />
+								<comboitem label="PINPAD"
+									value="03" />
+								<comboitem label="DOCUMENT"
+									value="04" />
+								<comboitem label="SUPPLIES"
+									value="05" />	
+							</combobox> -->
+					</listheader>
+					<listheader sort="auto(producttype)">
+						<textbox inplace="true" class="cheader"
+							value="@bind(vm.producttype)" cols="30" maxlength="50"
+							placeholder="Tipe Produk"
+							tooltiptext="${labels.common.searchonheader}"
+							onOK="@command('doSearch')" />
+					</listheader>
+					<listheader label="Stock" align="right"
+						width="120px" />
+					<listheader label="Pagu Stock" align="right"
+						width="120px" />
+				</listhead>
+			</listbox>
+			<separator />
+	</window>
+</zk>

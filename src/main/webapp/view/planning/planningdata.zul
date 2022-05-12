@@ -1,0 +1,87 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winPlanningdata" border="normal"
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.PlanningDataVm')">
+		<caption/>
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<groupbox mold="3d">
+			<div class="card-header" id="divRoot">
+				<label id="lbTitle" />
+			</div>
+			<grid>
+				<columns>
+					<column width="200px" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<label value="No. Planning" />
+						<label value="@load(vm.obj.planno)" />
+					</row>
+					<row>
+						<label value="Tanggal Input Planning" />
+						<label
+							value="@load(vm.obj.inputtime) @converter('formatedDate', format='dd-MM-yyyy HH:mm')" />
+					</row>
+					<row>
+						<label value="Cabang" />
+						<label
+							value="@load(vm.obj.mbranch.branchname)" />
+					</row>
+					<row>
+						<label value="Product Group" />
+						<label value="@load(vm.obj.productgroup)" />
+					</row>
+					
+					<row>
+						<label value="Total Data" />
+						<label value="@load(vm.obj.totalqty)" />
+					</row>
+					<row>
+						<label value="Anggaran" />
+						<decimalbox format=" 'Rp ' ###,##0" 
+						value="@load(vm.obj.anggaran)" disabled="true"/>
+					</row>
+					<row>
+						<label value="Inputer" />
+						<label value="@load(vm.obj.inputer)" />
+					</row>
+					<row>
+						<label value="No. Memo" />
+						<label value="@load(vm.obj.memono)" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<separator />
+		<div class="row">
+			<div class="col-md-10">
+				<paging id="paging" autohide="true" />
+			</div>
+			<div class="col-md-2" align="right">
+				<label value="Total Record :" style="font-weight: bold" />
+				<label value="@load(vm.pageTotalSize)"
+					style="font-weight: bold" />
+			</div>
+		</div>
+		<grid id="grid" emptyMessage="${labels.common.emptymsg}">
+			<columns>
+				<column label="${labels.common.no}" align="right"
+					width="40px" />
+				<column label="Kode Grup Produk"  align="center"
+					width="140px"/>
+				<column label="Nama Grup Produk" />
+				<column label="Tipe Produk" />
+				<column label="Tanggal Input" align="center"
+					width="140px" />
+				<column label="Jumlah" align="right" width="100px" />
+				<column label="Stok" align="right" width="100px" />
+			</columns>
+		</grid>
+		<separator />
+	</window>
+</zk>

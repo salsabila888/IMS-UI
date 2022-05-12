@@ -1,0 +1,17 @@
+/ActivationDataHandler.java/1.9/Mon Feb 21 03:48:04 2022//
+/ClosingHandler.java/1.1/Mon Nov 23 11:32:19 2020//
+/FlowHandler.java/1.3/Wed Jan 27 11:07:28 2021//
+/MailHandler.java/1.1/Mon Nov 23 11:32:19 2020//
+/MailSender.java/1.3/Mon Feb 14 10:07:53 2022//
+/MailUtil.java/1.1/Mon Nov 23 11:32:19 2020//
+/NotifHandler.java/1.3/Wed Jan 27 11:07:28 2021//
+/OrderPrintHandler.java/1.1/Mon Oct 26 12:31:45 2020//
+/PaketManifestHandler.java/1.4/Wed Jan 27 11:07:28 2021//
+/PersoManifestHandler.java/1.1/Tue Oct 13 07:20:34 2020//
+/PersoPrintHandler.java/1.3/Fri Mar 12 10:08:12 2021//
+/PinmailerHandler.java/1.8/Fri Feb 19 10:09:33 2021//
+/ScheduleManager.java/1.1/Tue Oct 13 07:20:34 2020//
+/SlaHandler.java/1.3/Fri Nov 27 04:55:19 2020//
+/StockEstimationHandler.java/1.1/Mon Nov 23 11:32:19 2020//
+/StockPaguAlertHandler.java/1.3/Fri Jun  4 04:44:30 2021//
+/UneodHandler.java/1.1/Mon Nov 23 11:32:19 2020//

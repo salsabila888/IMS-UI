@@ -1,0 +1,36 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.CompanydataVm')"
+		validationMessages="@id('vmsgs')">
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<div class="panel panel-default panel-sm">
+			<div class="panel-heading">
+				<n:h3 class="panel-title"><n:b>
+					<n:span class="glyphicon glyphicon-cog" />
+					Company Data Setting
+				</n:b></n:h3>
+			</div>
+			<div class="panel-body">
+				<separator />
+				<grid id="grid" sclass="table table-bordered">
+					<columns>
+						<column label="Parameter Name" width="30%" />
+						<column label="Parameter Value" />						
+					</columns>
+					<rows />
+				</grid>
+				<separator />
+				<div align="right">
+				<button sclass="btn btn-primary btn-sm"
+					label="${labels.common.save}" onClick="@command('doSave')" width="100px" />
+				</div>
+			</div>
+		</div>
+		<separator />
+	</window>
+</zk>

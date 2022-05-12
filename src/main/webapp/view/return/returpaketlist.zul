@@ -1,0 +1,129 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.ReturpaketListVm')"
+		validationMessages="@id('vmsgs')">
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<div class="card">
+			<div class="card-header">
+				<n:h3>
+					<n:b>Daftar Retur Paket</n:b>
+				</n:h3>
+			</div>
+			<div class="card-body">
+				<groupbox mold="3d">
+					<caption label="${labels.common.searching}"
+						image="/images/search.png" />
+					<grid>
+						<columns>
+							<column width="150px" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label value="Tahun" />
+								<intbox value="@bind(vm.year)" />
+							</row>
+							<row>
+								<label value="Bulan" />
+								<combobox id="cbMonth" cols="12"
+									selectedItem="@bind(vm.month)" />
+							</row>
+						</rows>
+						<foot>
+							<footer />
+							<footer>
+								<n:div class="
+									btn-group "
+									role="group">
+									<button
+										sclass="btn btn-default btn-sm"
+										label="${labels.common.search}"
+										onClick="@command('doSearch')" />
+									<button
+										sclass="btn btn-default btn-sm" label="${labels.common.reset}"
+										onClick="@command('doReset')" />
+								</n:div>
+							</footer>
+						</foot>
+					</grid>
+				</groupbox>
+				<div class="row">
+					<div class="col-md-10">
+						<paging id="paging" autohide="true" />
+					</div>
+					<div class="col-md-2" align="right">
+						<label value="Total Record :"
+							style="font-weight: bold" />
+						<label value="@load(vm.pageTotalSize)"
+							style="font-weight: bold" />
+					</div>
+				</div>
+				<grid id="grid"
+					emptyMessage="${labels.common.emptymsg}">
+					<columns>
+						<column label="${labels.common.no}"
+							align="right" width="40px" />
+						<column label="Pilih" align="right"
+							width="80px">
+							<checkbox
+								onCheck="@command('doCheckedall', checked=self.checked)" />
+						</column>
+						<column label="No. Order" />
+						<column label="Grup Produk" />
+						<column label="Tanggal Order" align="center"
+							width="125px" />
+						<column label="Jumlah" align="right"
+							width="100px" />
+						<column label="Pemesan" align="center" />
+					</columns>
+				</grid>
+				<separator />
+				<div class="row">
+					<div class="col-12" align="right">
+						<grid width="400px">
+							<columns>
+								<column label="Total Record Selected"
+									align="center" />
+								<column label="Total Data Selected"
+									align="center" />
+							</columns>
+							<rows>
+								<row>
+									<decimalbox cols="15"
+										value="@load(vm.totalselected)" format="#,###" inplace="true"
+										readonly="true" style="text-align:right" />
+									<decimalbox cols="15"
+										value="@load(vm.totaldataselected)" format="#,###"
+										inplace="true" readonly="true" style="text-align:right" />
+								</row>
+							</rows>
+						</grid>
+						<separator />
+						<grid width="400px">
+							<columns>
+								<column label="Action" align="center" />
+							</columns>
+							<rows>
+								<row>
+									<button width="160px"
+										autodisable="self" label="Reset Data"
+										sclass="btn btn-danger btn-sm"
+										onClick="@command('doResetSelected')" />
+									<button width="160px"
+										autodisable="self" label="Paket Done"
+										sclass="btn btn-primary btn-sm" image="/images/done.png"
+										onClick="@command('doDoneSorting')" />
+								</row>
+							</rows>
+						</grid>
+					</div>
+				</div>
+			</div>
+		</div>
+	</window>
+</zk>

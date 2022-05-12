@@ -1,0 +1,121 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.IncomingListVm')"
+		validationMessages="@id('vmsgs')">
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<div class="card">
+			<div class="card-header">
+				<n:h3>
+					<n:b>Daftar Data Incoming</n:b>
+				</n:h3>
+			</div>
+			<div class="card-body">
+				<groupbox mold="3d">
+					<caption label="${labels.common.searching}"
+						image="/images/search.png" />
+					<grid>
+						<columns>
+							<column width="130px" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label value="Tahun" />
+								<intbox value="@bind(vm.year)" />
+							</row>
+							<row>
+								<label value="Bulan" />
+								<combobox id="cbMonth" cols="12"
+									selectedItem="@bind(vm.month)" />
+							</row>
+				<!--  			<row>
+								<label value="Status" />
+								<combobox id="cbStatus"
+									selectedItem="@bind(vm.status)">
+									<comboitem value="" label="ALL" />
+									<comboitem label="Approve"
+										value="A" />
+									<comboitem label="Decline"
+										value="ID" />
+									<comboitem value="IA"
+										label="Wait Approval Inventory" />
+								</combobox>
+							</row> -->
+						</rows>
+						<foot>
+							<footer />
+							<footer>
+								<n:div class="btn-group" role="group">
+									<button
+										sclass="btn btn-default btn-sm"
+										label="${labels.common.search}"
+										onClick="@command('doSearch')" />
+									<button
+										sclass="btn btn-default btn-sm" label="${labels.common.reset}"
+										onClick="@command('doReset')" />
+								</n:div>
+							</footer>
+						</foot>
+					</grid>
+				</groupbox>
+				<separator />
+				<div class="row">
+					<div class="col-md-10">
+						<paging id="paging" autohide="true" />
+					</div>
+					<div class="col-md-2" align="right">
+						<label value="Total Record :"
+							style="font-weight: bold" />
+						<label value="@load(vm.pageTotalSize)"
+							style="font-weight: bold" />
+					</div>
+				</div>
+				<grid id="grid"
+					emptyMessage="${labels.common.emptymsg}">
+					<columns>
+						<column label="${labels.common.no}"
+							align="right" width="40px" />
+						<column label="Incoming Id" align="center"
+							width="110px" />
+						<column align="center" width="250px">
+							<textbox inplace="true" class="cheader"
+								value="@bind(vm.producttype)" cols="15" maxlength="70"
+								placeholder="Tipe Produk" style="text-align:center"
+								tooltiptext="${labels.common.searchonheader}"
+								onOK="@command('doSearch')" />
+						</column>
+						
+						<column label="Jumlah" width="100px"
+							align="right" />
+						<column label="Memo" width="100px"/>
+						<column label="Status" align="center"
+							width="120px" />
+						<column label="Dientri Oleh" align="center"
+							width="120px" />
+							<column label="Waktu Entri" align="center"
+							width="130px" />
+						<column label="Pemutus" width="100px" />
+				  		<column label="Waktu Keputusan" align="center"
+							width="130px" />
+						<column label="Nama Supplier" align="center"
+							width="130px" /> 
+						<column label="No SPK" align="center"
+							width="130px" /> 
+						<column label="Tanggal SPK" align="center"
+							width="130px" /> 
+						<column label="Tanggal Manufaktur" align="center"
+							width="130px" /> 
+						<column label="Harga" align="center"
+							width="130px" /> 
+					</columns>
+				</grid>
+				<separator />
+			</div>
+		</div>
+	</window>
+</zk>

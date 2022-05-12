@@ -1,0 +1,28 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.InquiryDataDetailVm')"
+		validationMessages="@id('vmsgs')">
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<caption/>
+		<div class="card">
+			<div class="card-header">
+				<n:h3>Informasi Data</n:h3>
+			</div>
+			<div class="card-body">
+				<grid id="grid"
+					emptyMessage="${labels.common.emptymsg}">
+					<columns>
+						<column label="Tanggal" align="center"
+							width="250px" />
+						<column label="Keterangan"/>
+					</columns>
+				</grid>
+			</div>
+		</div>
+	</window>
+</zk>

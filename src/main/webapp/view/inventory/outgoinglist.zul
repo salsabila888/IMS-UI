@@ -1,0 +1,145 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.OutgoingListVm')"
+		validationMessages="@id('vmsgs')">
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<div class="card">
+			<div class="card-header">
+				<n:h3>
+					<n:b>Daftar Data Outgoing</n:b>
+				</n:h3>
+			</div>
+			<div class="card-body">
+				<groupbox mold="3d">
+					<caption label="${labels.common.searching}"
+						image="/images/search.png" />
+					<grid>
+						<columns>
+							<column width="130px" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label value="Tahun" />
+								<intbox value="@bind(vm.year)" />
+							</row>
+							<row>
+								<label value="Bulan" />
+								<combobox id="cbMonth" cols="12"
+									selectedItem="@bind(vm.month)" />
+							</row>
+							<row>
+								<label value="Status" />
+								<combobox id="cbStatus"
+									selectedItem="@bind(vm.status)">
+									<comboitem value="" label="ALL" />
+									<comboitem label="Approved"
+										value="I29" />
+									<comboitem label="Decline"
+										value="I22" />
+									<comboitem value="I21"
+										label="Wait Approval Inventory" />
+								</combobox>
+							</row>
+						</rows>
+						<foot>
+							<footer />
+							<footer>
+								<div class="row">
+									<div class="col-md-6">
+										<n:div class="btn-group"
+											role="group">
+											<button autodisable="self"
+												sclass="btn btn-default btn-sm"
+												label="${labels.common.search}"
+												onClick="@command('doSearch')" />
+											<button autodisable="self"
+												sclass="btn btn-default btn-sm"
+												label="${labels.common.reset}"
+												onClick="@command('doReset')" />
+										</n:div>
+									</div>
+									<div class="col-md-6"
+										align="right">
+										<button
+											sclass="btn btn-default btn-sm" label="Export to Excel"
+											image="/images/excel.png" onClick="@command('doExport')"
+											autodisable="self" />
+									</div>
+								</div>
+								<!-- <n:div class="btn-group" role="group">
+									<button 
+										sclass="btn btn-default btn-sm"
+										label="${labels.common.search}"
+										onClick="@command('doSearch')" />
+									<button
+										sclass="btn btn-default btn-sm" label="${labels.common.reset}"
+										onClick="@command('doReset')" />
+								</n:div> -->
+							</footer>
+						</foot>
+					</grid>
+				</groupbox>
+				<separator />
+				<div class="row">
+					<div class="col-md-10">
+						<paging id="paging" autohide="true" />
+					</div>
+					<div class="col-md-2" align="right">
+						<label value="Total Record :"
+							style="font-weight: bold" />
+						<label value="@load(vm.pageTotalSize)"
+							style="font-weight: bold" />
+					</div>
+				</div>
+				<grid id="grid"
+					emptyMessage="${labels.common.emptymsg}">
+					<columns>
+						<column label="${labels.common.no}"
+							align="right" width="40px" />
+						<column label="Outgoing Id" align="center"
+							width="110px" />
+						<column align="center">
+							<textbox inplace="true" class="cheader"
+								value="@bind(vm.producttype)" cols="15" maxlength="10"
+								placeholder="Tipe Produk" style="text-align:center"
+								tooltiptext="${labels.common.searchonheader}"
+								onOK="@command('doSearch')" />
+						</column>
+						<column align="center" width="110px">
+							<textbox inplace="true" class="cheader"
+								value="@bind(vm.productcode)" cols="10" maxlength="10"
+								placeholder="Kode Produk" style="text-align:center"
+								tooltiptext="${labels.common.searchonheader}"
+								onOK="@command('doSearch')" />
+						</column>
+						<column align="center">
+							<textbox inplace="true" class="cheader"
+								value="@bind(vm.productname)" cols="15" maxlength="10"
+								placeholder="Jenis Produk" style="text-align:center"
+								tooltiptext="${labels.common.searchonheader}"
+								onOK="@command('doSearch')" />
+						</column>
+						<column label="Waktu Order" align="center"
+							width="130px" />
+						<column label="Jumlah" width="90px"
+							align="right" />
+						<column label="Status" align="center"
+							width="120px" />
+						<column label="Requestor" align="center"
+							width="120px" />
+						<column label="Pemutus" width="100px" />
+						<column label="Action" align="center"
+							width="150px" />
+					</columns>
+				</grid>
+				<separator />
+			</div>
+		</div>
+	</window>
+</zk>

@@ -1,0 +1,230 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.PersoListVm')"
+		validationMessages="@id('vmsgs')">
+		<div class="card">
+			<div class="card-header">
+				<n:h3>
+					<n:b>Daftar Manifest Perso</n:b>
+				</n:h3>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6">
+						<groupbox mold="3d">
+							<caption label="${labels.common.searching}"
+								image="/images/search.png" />
+							<grid>
+								<columns>
+									<column width="130px" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label value="Tahun" />
+										<intbox value="@bind(vm.year)" />
+									</row>
+									<row>
+										<label value="Bulan" />
+										<combobox id="cbMonth" cols="12"
+											selectedItem="@bind(vm.month)" />
+									</row>
+									<row>
+										<label value="Status" />
+										<combobox id="cbStatus"
+											cols="35" selectedItem="@bind(vm.status)" readonly="true">
+											<comboitem value=""
+												label="ALL" />
+											<comboitem value="P11"
+												label="WAIT APPROVAL PERSO" />
+											<comboitem value="P12"
+												label="PERSO REJECTED" />
+											<comboitem value="P13"
+												label="WAIT APPROVAL INVENTORY (OUTGOING)" />
+											<comboitem value="P14"
+												label="REJECTED BY INVENTORY" />
+											<comboitem value="P15"
+												label="PRODUKSI" />
+											<comboitem value="P19"
+												label="DONE PRODUKSI" />
+										</combobox>
+									</row>
+								</rows>
+								<foot>
+									<footer />
+									<footer>
+										<n:div class="btn-group"
+											role="group">
+											<button
+												sclass="btn btn-default btn-sm"
+												label="${labels.common.search}"
+												onClick="@command('doSearch')" />
+											<button
+												sclass="btn btn-default btn-sm"
+												label="${labels.common.reset}"
+												onClick="@command('doReset')" />
+										</n:div>
+									</footer>
+								</foot>
+							</grid>
+						</groupbox>
+					</div>
+					<div class="col-md-6">
+						<groupbox mold="3d">
+							<caption label="Outstanding Perso" />
+							<grid id="gridStatus"
+								emptyMessage="${labels.common.emptymsg}">
+								<columns>
+									<column label="Periode"
+										width="110px" />
+									<column label="Status" />
+									<column label="Manifest"
+										align="right" width="100px" />
+									<column label="Total Data"
+										align="right" width="100px" />
+								</columns>
+							</grid>
+						</groupbox>
+					</div>
+				</div>
+				<separator />
+
+				<panel border="normal">
+					<panelchildren>
+						<tabbox width="100%" sclass="nav_tabs">
+							<tabs id="tabs"></tabs>
+						</tabbox>
+						<separator />
+
+						<div class="row">
+							<div class="col-md-10">
+								<paging id="paging" autohide="true" />
+							</div>
+							<div class="col-md-2" align="right">
+								<label value="Total Record :"
+									style="font-weight: bold" />
+								<label value="@load(vm.pageTotalSize)"
+									style="font-weight: bold" />
+							</div>
+						</div>
+						<grid id="grid"
+							emptyMessage="${labels.common.emptymsg}">
+							<columns>
+								<column label="${labels.common.no}"
+									align="right" width="40px" />
+								<column align="center" width="50px">
+									<checkbox id="chkAll"
+										onCheck="@command('doCheckedall', checked=self.checked)" />
+								</column>
+								<column align="center" width="120px">
+									<textbox inplace="true"
+										class="cheader" value="@bind(vm.persoid)" cols="15"
+										maxlength="10" placeholder="No Manifest"
+										tooltiptext="${labels.common.searchonheader}"
+										onOK="@command('doSearch')" />
+								</column>
+								<column align="center" width="135px">
+									<datebox inplace="true"
+										class="cheader" format="dd-MM-yyyy" style="text-align: center"
+										value="@bind(vm.persodate)" cols="10" maxlength="10"
+										placeholder="Waktu Manifest"
+										tooltiptext="${labels.common.searchonheader}"
+										onOK="@command('doSearch')" />
+								</column>
+								<column align="center" width="130px">
+									<textbox inplace="true"
+										class="cheader" style="text-align: center"
+										value="@bind(vm.productcode)" cols="10" maxlength="10"
+										placeholder="Kode Produk"
+										tooltiptext="${labels.common.searchonheader}"
+										onOK="@command('doSearch')" />
+								</column>
+								<column>
+									<textbox inplace="true"
+										class="cheader" value="@bind(vm.productname)" cols="15"
+										maxlength="10" placeholder="Jenis Produk"
+										tooltiptext="${labels.common.searchonheader}"
+										onOK="@command('doSearch')" />
+								</column>
+								<column align="center" width="130px">
+									<datebox inplace="true"
+										class="cheader" format="dd-MM-yyyy" style="text-align: center"
+										value="@bind(vm.orderdate)" cols="6" maxlength="10"
+										placeholder="Tgl Data"
+										tooltiptext="${labels.common.searchonheader}"
+										onOK="@command('doSearch')" />
+								</column>
+								<column label="Total Data" align="right"
+									width="100px" />
+								<column label="Diproses Oleh"
+									align="center" width="130px" />
+								<column label="Status" align="center"
+									width="200px" />
+							</columns>
+						</grid>
+					</panelchildren>
+				</panel>
+				<separator />
+				<div class="row">
+					<div class="col-4">
+						<button sclass="btn btn-default btn-sm"
+							label="Export to Excel" image="/images/excel.png"
+							onClick="@command('doExport')" autodisable="self" />
+					</div>
+					<div class="col-8" align="right">
+						<grid width="450px">
+							<columns>
+								<column label="Total Record Selected"
+									align="center" />
+								<column label="Total Data Selected"
+									align="center" />
+							</columns>
+							<rows>
+								<row>
+									<decimalbox width="190px"
+										value="@load(vm.totalselected)" format="#,###" inplace="true"
+										readonly="true" style="text-align:right" />
+									<decimalbox width="190px"
+										value="@load(vm.totaldataselected)" format="#,###"
+										inplace="true" readonly="true" style="text-align:right" />
+								</row>
+							</rows>
+						</grid>
+						<separator />
+						<grid width="450px">
+							<columns>
+								<column label="Action" align="center" />
+							</columns>
+							<rows>
+								<row>
+									<button width="190px"
+										autodisable="self" label="Cetak Bon Kartu"
+										image="/images/printer_label.png" sclass="btn btn-info btn-sm"
+										onClick="@command('doBon')" />
+									<button width="190px"
+										autodisable="self" label="Cetak Manifest"
+										image="/images/printer.png" sclass="btn btn-success btn-sm"
+										onClick="@command('doManifestPrint')" />
+								</row>
+								<row>
+									<button width="190px"
+										autodisable="self" label="Reset Data"
+										sclass="btn btn-danger btn-sm"
+										onClick="@command('doResetSelected')" />
+									<button width="190px"
+										autodisable="self" label="Update Status Done"
+										image="/images/done.png" sclass="btn btn-primary btn-sm"
+										onClick="@command('doDone')" />
+
+								</row>
+							</rows>
+						</grid>
+					</div>
+				</div>
+			</div>
+		</div>
+	</window>
+</zk>

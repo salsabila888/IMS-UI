@@ -1,0 +1,108 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.DeliveryCourierListVm')"
+		validationMessages="@id('vmsgs')">
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<div class="card">
+			<div class="card-header">
+				<n:h3>
+					<n:b>Daftar Manifest Kurir</n:b>
+				</n:h3>
+			</div>
+			<div class="card-body">
+				<groupbox mold="3d">
+					<caption label="${labels.common.searching}"
+						image="/images/search.png" />
+					<grid>
+						<columns>
+							<column width="150px" />
+							<column />
+						</columns>
+						<rows>
+							<row>
+								<label value="Tanggal" />
+								<datebox value="@bind(vm.processtime)"
+									format="dd-MM-yyyy" cols="12" maxlength="10" />
+							</row>
+						</rows>
+						<foot>
+							<footer />
+							<footer>
+								<n:div class="btn-group" role="group">
+									<button
+										sclass="btn btn-default btn-sm"
+										label="${labels.common.search}"
+										onClick="@command('doSearch')" />
+									<button
+										sclass="btn btn-default btn-sm" label="${labels.common.reset}"
+										onClick="@command('doReset')" />
+								</n:div>
+							</footer>
+						</foot>
+					</grid>
+				</groupbox>
+				<div class="row">
+					<div class="col-md-10">
+						<paging id="paging" autohide="true" />
+					</div>
+					<div class="col-md-2" align="right">
+						<label value="Total Record :"
+							style="font-weight: bold" />
+						<label value="@load(vm.pageTotalSize)"
+							style="font-weight: bold" />
+					</div>
+				</div>
+				<grid id="grid"
+					emptyMessage="${labels.common.emptymsg}">
+					<columns>
+						<column label="${labels.common.no}"
+							align="right" width="40px" />
+						<column width="200px">
+							<textbox inplace="true" class="cheader"
+								value="@bind(vm.dlvcourierid)" cols="15" maxlength="18"
+								placeholder="No Manifest"
+								tooltiptext="${labels.common.searchonheader}"
+								onOK="@command('doSearch')" />
+						</column>
+						<column label="Grup Produk" align="center"
+							width="150px" />
+						<column label="Tanggal Proses" align="center"
+							width="135px" />
+						<column label="Total Paket" align="right"
+							width="100px" />
+						<column width="170px">
+							<combobox id="cbEkspedisi" cols="8"
+								inplace="true" model="@load(vm.mcouriervendormodel)"
+								value="Ekspedisi" selectedItem="@bind(vm.mcouriervendor)"
+								onChange="@command('doSearch')">
+								<template name="model"
+									var="mcouriervendor">
+									<comboitem
+										label="@load(mcouriervendor.vendorcode)" />
+								</template>
+							</combobox>
+						</column>
+						<column label="Kurir" />
+						<column label="Status" align="center"
+							width="130px" />
+						<column width="170px">
+							<combobox id="tipeProses" cols="8"
+								inplace="true" selectedItem="@bind(vm.isurgent)" readonly="true"
+								onChange="@command('doSearch')" value="Tipe Proses">
+								<comboitem value="N" label="REGULAR" />
+								<comboitem value="Y" label="URGENT" />
+							</combobox>
+						</column>
+						<column label="Action" align="center"
+							width="80px" />
+					</columns>
+				</grid>
+			</div>
+		</div>
+	</window>
+</zk>

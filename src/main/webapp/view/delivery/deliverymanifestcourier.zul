@@ -1,0 +1,255 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.DeliveryManifestCourierVm')"
+		validationMessages="@id('vmsgs')">
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+		<div class="card">
+			<div class="card-header">
+				<n:h3>
+					<n:b>Manifest Kurir</n:b>
+				</n:h3>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-3">
+								<div class="card">
+									<div class="card-header">
+										<label value="KARTU"
+											style="font-size: 14px; font-weight: bold" />
+									</div>
+									<div class="card-body"
+										align="right">
+										<label value="Jumlah Paket : "
+											style="font-size: 14px" />
+										<label
+											value="@load(vm.totalcard)" style="font-size: 14px" />
+									</div>
+									<div class="card-footer">
+										<grid id="gridCard">
+											<columns>
+												<column label="Exp" />
+												<column label="Paket"
+													align="right" />
+											</columns>
+											<rows />
+										</grid>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="card">
+									<div class="card-header">
+										<label value="TOKEN"
+											style="font-size: 14px; font-weight: bold" />
+									</div>
+									<div class="card-body"
+										align="right">
+										<label value="Jumlah Paket : "
+											style="font-size: 14px" />
+										<label
+											value="@load(vm.totaltoken)" style="font-size: 14px" />
+									</div>
+									<div class="card-footer">
+										<grid id="gridToken">
+											<columns>
+												<column label="Exp" />
+												<column label="Paket"
+													align="right" />
+											</columns>
+											<rows />
+										</grid>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="card">
+									<div class="card-header">
+										<label value="PINPAD"
+											style="font-size: 14px; font-weight: bold" />
+									</div>
+									<div class="card-body"
+										align="right">
+										<label value="Jumlah Paket : "
+											style="font-size: 14px" />
+										<label
+											value="@load(vm.totalpinpad)" style="font-size: 14px" />
+									</div>
+									<div class="card-footer">
+										<grid id="gridPinpad">
+											<columns>
+												<column label="Exp" />
+												<column label="Paket"
+													align="right" />
+											</columns>
+											<rows />
+										</grid>
+									</div>
+								</div>
+							</div>
+							<!-- <div class="col-md-3">
+								<div class="card">
+									<div class="card-header">
+										<label value="PIN MAILER"
+											style="font-size: 14px; font-weight: bold" />
+									</div>
+									<div class="card-body"
+										align="right">
+										<label value="Jumlah Paket : "
+											style="font-size: 14px" />
+										<label
+											value="@load(vm.totalpinmailer)" style="font-size: 14px" />
+									</div>
+									<div class="card-footer">
+										<grid id="gridPinmailer">
+											<columns>
+												<column label="Exp" />
+												<column label="Paket"
+													align="right" />
+											</columns>
+											<rows />
+										</grid>
+									</div>
+								</div>
+							</div> -->
+							<div class="col-md-3">
+								<div class="card">
+									<div class="card-header">
+										<label value="SURAT BERHARGA"
+											style="font-size: 14px; font-weight: bold" />
+									</div>
+									<div class="card-body"
+										align="right">
+										<label value="Jumlah Paket : "
+											style="font-size: 14px" />
+										<label
+											value="@load(vm.totaldoc)" style="font-size: 14px" />
+									</div>
+									<div class="card-footer">
+										<grid id="gridDocument">
+											<columns>
+												<column label="Exp" />
+												<column label="Paket"
+													align="right" />
+											</columns>
+											<rows />
+										</grid>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<separator />
+				<div class="row">
+					<div class="col-md-6">
+						<groupbox mold="3d">
+							<caption label="Check-in Kurir" />
+							<grid>
+								<columns>
+									<column width="150px" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label value="Grup Produk" />
+										<combobox id="cbProductgroup"
+											selectedItem="@bind(vm.productgroup)" cols="30"
+											readonly="true">
+											<comboitem label="KARTU"
+												value="01" />
+											<comboitem label="TOKEN"
+												value="02" />
+											<comboitem label="PINPAD"
+												value="03" />
+											<comboitem label="DOCUMENT"
+												value="04" />
+											<comboitem label="SUPPLIES"
+												value="05" />
+											<comboitem
+												label="PIN MAILER" value="06" />
+										</combobox>
+									</row>
+									<row>
+										<label
+											value="Identifikasi Kurir" />
+										<hlayout>
+											<button id="btnScan" visible="false"
+												autodisable="self" label="Scan QR Code"
+												sclass="btn btn-success btn-sm"
+												onClick="@command('doScan')" />
+											<textbox
+												value="@bind(vm.couriercode)"
+												placeholder="Manual Identifikasi" cols="20" maxlength="20"
+												onOK="@command('doIdentify')" />
+										</hlayout>
+									</row>
+								</rows>
+							</grid>
+						</groupbox>
+					</div>
+					<div class="col-md-6">
+						<groupbox mold="3d">
+							<caption label="Informasi Kurir" />
+							<grid>
+								<columns>
+									<column width="150px" />
+									<column />
+								</columns>
+								<rows>
+									<row>
+										<label value="Expedisi" />
+										<textbox
+											value="@load(vm.objCourier.mcouriervendor.vendorname)"
+											cols="33" readonly="true" />
+									</row>
+									<row>
+										<label value="Nama" />
+										<textbox
+											value="@load(vm.objCourier.couriername)" cols="33"
+											readonly="true" />
+									</row>
+								</rows>
+							</grid>
+						</groupbox>
+					</div>
+				</div>
+
+				<separator />
+				<grid id="grid" emptyMessage="${labels.common.emptymsg}"
+					mold="paging" pageSize="20" pagingPosition="top">
+					<columns>
+						<column label="${labels.common.no}"
+							align="right" width="40px" />
+						<column align="center" width="60px">
+							<checkbox
+								onCheck="@command('doCheckedall', checked=self.checked)"
+								checked="true" />
+						</column>
+						<column label="No. Manifest" align="center"
+							width="170px" />
+						<column label="Tanggal Paket" align="center"
+							width="125px" />
+						<column label="Total" align="right"
+							width="100px" />
+						<column label="Tujuan" />
+						<column label="Alamat" />
+						<column label="Kota" width="150px" />
+					</columns>
+				</grid>
+				<separator />
+				<div align="center">
+					<button id="btnSave" autodisable="self"
+						width="120px" label="Submit" sclass="btn btn-primary btn-sm"
+						onClick="@command('doSave')" />
+				</div>
+			</div>
+		</div>
+	</window>
+</zk>

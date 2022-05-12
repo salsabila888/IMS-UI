@@ -1,0 +1,61 @@
+package com.sdd.caption.model;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.zkoss.zul.event.ListDataEvent;
+import org.zkoss.zul.ext.Sortable;
+
+import com.sdd.caption.dao.TreturnitemDAO;
+import com.sdd.caption.domain.Treturnitem;
+
+public class TreturnitemListModel extends AbstractPagingListModel<Treturnitem> implements Sortable<Treturnitem> {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private int _size = -1;
+	List<Treturnitem> oList;  
+
+	public TreturnitemListModel(int startPageNumber, int pageSize, String filter, String orderby) {
+		super(startPageNumber, pageSize, filter, orderby);
+	}
+	
+	@Override
+	protected List<Treturnitem> getPageData(int itemStartNumber, int pageSize, String filter, String orderby) {		
+		TreturnitemDAO oDao = new TreturnitemDAO() ;
+		try {
+			oList = oDao.listPaging(itemStartNumber, pageSize, filter, orderby);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return oList;
+	}
+
+	@Override
+	public int getTotalSize(String filter) {
+		TreturnitemDAO oDao = new TreturnitemDAO();	
+		try {
+			_size = oDao.pageCount(filter);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return _size;
+	}
+
+	@Override
+	public void sort(Comparator<Treturnitem> cmpr, boolean ascending) {		
+		Collections.sort(oList, cmpr);
+        fireEvent(ListDataEvent.CONTENTS_CHANGED, -1, -1);	
+		
+	}
+
+	@Override
+	public String getSortDirection(Comparator<Treturnitem> cmpr) {
+		return null;
+	}
+	
+
+}

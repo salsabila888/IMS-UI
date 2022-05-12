@@ -1,0 +1,139 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winPlanEntry"
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.OrderEntryVm')"
+		validationMessages="@id('vmsgs')">
+		<caption id="caption" visible="false" />
+		<div class="card">
+			<div class="card-header">
+				<div>
+					<n:h4>
+						<n:b>Entry Order Baru</n:b>
+					</n:h4>
+					<label value="@load(vm.productgroup)"
+						style="font-size: 16px" />
+				</div>
+			</div>
+			<div class="card-body">
+				<groupbox mold="3d"
+					form="@id('e') @load(vm.objForm) @save(vm.objForm, before='doSave') @validator(vm.validator)">
+					<caption label="Form Entry Order" />
+					<grid>
+						<columns>
+							<column width="150px" />
+							<column />
+						</columns>
+						<rows>
+							<row id="row">
+								<label value="No Registrasi" />
+								<textbox value="Auto Generated"
+									cols="30" readonly="true" />
+							</row>
+							<row>
+								<label value="Tanggal Input" />
+								<textbox
+									value="@bind(e.inserttime) @converter('formatedDate', format='dd, MMM yyyy')"
+									readonly="true" cols="30" />
+							</row>
+							<row>
+								<label value="Nama Cabang" />
+								<textbox value="@load(vm.cabang)"
+									cols="30" readonly="true" />
+							</row>
+							<row id="outlet" visible="false">
+								<label value="Kode KCP" />
+								<hlayout>
+									<textbox
+										value="@bind(e.orderoutlet)" maxlength="2" cols="30" />
+									<label style="color:red"
+										value="@load(vmsgs['orderoutlet'])" />
+								</hlayout>
+
+							</row>
+							<row>
+								<label value="Nama Wilayah" />
+								<textbox value="@load(vm.wilayah)"
+									cols="30" readonly="true" />
+							</row>
+							<row>
+								<hlayout>
+								<label value="Jenis Produk" />
+								<label
+									value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<combobox id="cbProduct"
+										model="@load(vm.mproductmodel)" cols="30"
+										selectedItem="@bind(e.mproduct)">
+										<template name="model"
+											var="mproduct">
+											<comboitem
+												label="@load(mproduct.productname)"
+												description="@load(mproduct.productcode)" />
+										</template>
+									</combobox>
+									<label style="color:red"
+										value="@load(vmsgs['mproduct'])" />
+								</hlayout>
+							</row>
+							<row>
+								<hlayout>
+								<label value="Jumlah" />
+								<label
+									value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<intbox value="@bind(e.itemqty)"
+										cols="15" format="#,###" />
+									<combobox
+										selectedItem="@bind(vm.unit)" cols="9" disabled="true"
+										buttonVisible="false" inplace="true" autocomplete="true">
+										<comboitem value="04"
+											label="Lembar/Buku" />
+										<comboitem value="02"
+											label="Unit" />
+									</combobox>
+									<label style="color:red"
+										value="@load(vmsgs['itemqty'])" />
+								</hlayout>
+							</row>
+							<row>
+								<hlayout>
+								<label value="Alasan Order" />
+								<label
+									value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<textbox value="@bind(vm.memo)"
+										rows="3" cols="30" maxlength="200" />
+									<label style="color:red"
+										value="@load(vmsgs['memo'])" />
+								</hlayout>
+							</row>
+						</rows>
+					</grid>
+					<separator />
+				</groupbox>
+			</div>
+			<div class="card-footer">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-6">
+								<button id="btnSave" width="120px"
+									autodisable="self" label="Submit"
+									sclass="btn btn-primary btn-sm" onClick="@command('doSave')" />
+							</div>
+							<!-- <div class="col-md-6" align="right">
+								<image src="/images/back.png" style="cursor:hand;cursor:pointer"
+								tooltiptext="Back" width="80px" height="50px"
+								onClick="@command('doClose')" />
+								</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</window>
+</zk>

@@ -1,0 +1,164 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winPlanEntry"
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.PlanningEntryVm')"
+		validationMessages="@id('vmsgs')">
+		<caption id="caption" visible="false" />
+		<div class="card">
+			<div class="card-header">
+				<div>
+					<n:h4>
+						<n:b>Entry Usulan Pengadaan</n:b>
+					</n:h4>
+					<label value="@load(vm.productgroup)"
+						style="font-size: 16px" />
+				</div>
+			</div>
+			<div class="card-body">
+				<groupbox mold="3d"
+					form="@id('e') @load(vm.objForm) @save(vm.objForm, before='doSave') @validator(vm.validator)">
+					<caption label="Form Usulan Pengadaan" />
+					<grid>
+						<columns>
+							<column width="150px" />
+							<column />
+						</columns>
+						<rows>
+							<row id="row">
+								<label value="No Registrasi" />
+								<textbox value="Auto Generated"
+									cols="30" readonly="true" />
+							</row>
+							<row>
+								<label value="Nama Cabang/Divisi" />
+								<textbox value="@load(vm.cabang)"
+									cols="30" readonly="true" />
+							</row>
+							<row>
+								<label value="Tanggal Input" />
+								<textbox
+									value="@bind(e.inputtime) @converter('formatedDate', format='dd, MMM yyyy')"
+									readonly="true" cols="30" />
+							</row>
+							<row>
+								<label value="Grup Produk" />
+								<textbox value="@bind(vm.productgroup)"
+									readonly="true" cols="30" />
+							</row>
+							<row>
+								<hlayout>
+									<label value="Anggaran" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<textbox value="Rp." disabled="true"
+										cols="1" inplace="true" />
+									<decimalbox format="#,###"
+										value="@bind(e.anggaran)" cols="22" maxlength="17" />
+									<label style="color:red"
+										value="@load(vmsgs['anggaran'])" />
+								</hlayout>
+							</row>
+							<row>
+								<label value="Jumlah" />
+								<hlayout>
+									<intbox value="@bind(vm.totaldata)"
+										readonly="true" cols="15" format="#,###" />
+									<combobox
+										selectedItem="@bind(vm.unit)" cols="9" disabled="true"
+										buttonVisible="false" inplace="true" autocomplete="true">
+										<comboitem value="04"
+											label="Lembar/Buku" />
+										<comboitem value="02"
+											label="Unit" />
+									</combobox>
+								</hlayout>
+							</row>
+							<row>
+								<hlayout>
+									<label value="No Memo" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<textbox value="@bind(e.memono)"
+										cols="30" maxlength="20" />
+									<label style="color:red"
+										value="@load(vmsgs['memono'])" />
+								</hlayout>
+							</row>
+							<row>
+								<label value="File Memo" />
+								<vlayout>
+									<button id="btnBrowse"
+										label="Browse File..." upload="true, maxsize=500000"
+										sclass="btn btn-default btn-sm"
+										onUpload="@command('doBrowseProduct', upEvent=event)" />
+									<label id="fileBrowse"
+										value="@load(vm.filename)" />
+								</vlayout>
+							</row>
+							<row>
+								<hlayout>
+									<label value="Tanggal Memo" />
+									<label value="*" style="color:red" />
+								</hlayout>
+								<hlayout>
+									<datebox value="@bind(vm.memodate)"
+										format="dd MMMM yyyy" cols="26" />
+									<label style="color:red"
+										value="@load(vmsgs['memodate'])" />
+								</hlayout>
+							</row>
+						</rows>
+					</grid>
+					<separator />
+				</groupbox>
+				<div class="row">
+					<div class="col-md-10"></div>
+					<div class="col-md-2" align="right">
+						<label value="Total Record :"
+							style="font-weight: bold" />
+						<label value="@load(vm.totalrecord)"
+							style="font-weight: bold" />
+					</div>
+				</div>
+				<grid id="grid" pagingPosition="top"
+					emptyMessage="${labels.common.emptymsg}" mold="paging"
+					pageSize="20">
+					<columns>
+						<column label="${labels.common.no}"
+							align="right" width="40px" />
+						<column label="Pilih" align="center" width="80px"/>
+						<column>
+							<textbox inplace="true" class="cheader"
+								value="@bind(vm.producttype)" cols="70" maxlength="50"
+								placeholder="Tipe Produk" tooltiptext="${labels.common.searchonheader}"
+								onOK="@command('doSearch')" />
+						</column>
+						<column label="Quantity" align="right"
+							width="300px" />
+					</columns>
+				</grid>
+			</div>
+			<div class="card-footer">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-6">
+								<button id="btnSave" width="120px"
+									autodisable="self" label="Submit"
+									sclass="btn btn-primary btn-sm" onClick="@command('doSave')" />
+							</div>
+							<!-- <div class="col-md-6" align="right">
+								<image src="/images/back.png" style="cursor:hand;cursor:pointer"
+								tooltiptext="Back" width="80px" height="50px"
+								onClick="@command('doClose')" />
+								</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</window>
+</zk>

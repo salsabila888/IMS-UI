@@ -1,0 +1,34 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.OrderDashboardVm')">
+		<div class="card">
+			<div class="card-header">
+				<div id="divEntry" visible="false">
+					<n:h3>
+						<n:b>Order Cabang</n:b>
+					</n:h3>
+				</div>
+				<div id="divList" visible="false">
+					<n:h3>
+						<n:b>Daftar Order Cabang</n:b>
+					</n:h3>
+				</div>
+				<div id="divApproval" visible="false">
+					<n:h3>
+						<n:b>Approval Order Cabang</n:b>
+					</n:h3>
+				</div>
+			</div>
+			<div class="card-body" style="background-color:#E6E6FA">
+				<div class="row">
+					<div class="col-md-12">
+						<div id="divProduct" class="row"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</window>
+</zk>

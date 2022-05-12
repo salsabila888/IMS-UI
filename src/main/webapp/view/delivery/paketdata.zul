@@ -1,0 +1,127 @@
+<?page title="${desktop.webApp.appName}"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c" ?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<window id="winPaketdata" border="normal"
+		title="${desktop.webApp.appName}"
+		viewModel="@id('vm') @init('com.sdd.caption.viewmodel.PaketDataVm')">
+		<caption label="Data Detail Paket" />
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+
+		<groupbox mold="3d">
+			<caption label="Data Manifest Paket" />
+			<grid>
+				<columns>
+					<column width="200px" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<label value="No Manifest Paket" />
+						<label value="@load(vm.obj.paketid)" />
+					</row>
+					<row>
+						<label value="Waktu Manifest Paket" />
+						<label
+							value="@load(vm.obj.processtime) @converter('formatedDate', format='dd-MM-yyyy HH:mm')" />
+					</row>
+					<row>
+						<label value="Tipe Kartu" />
+						<label
+							value="@load(vm.obj.mproduct.mproducttype.producttype)" />
+					</row>
+					<row>
+						<label value="Kode Kartu" />
+						<label
+							value="@load(vm.obj.mproduct.productcode)" />
+					</row>
+					<row>
+						<label value="Jenis Kartu" />
+						<label
+							value="@load(vm.obj.mproduct.productname)" />
+					</row>
+					<row>
+						<label value="Tanggal Data" />
+						<label
+							value="@load(vm.obj.orderdate) @converter('formatedDate', format='dd-MM-yyyy')" />
+					</row>
+					<row>
+						<label value="Total Data" />
+						<label value="@load(vm.obj.totaldata)" />
+					</row>
+					<row>
+						<label value="Tanggal Produksi" />
+						<label
+							value="@load(vm.obj.tperso.persofinishtime) @converter('formatedDate', format='dd-MM-yyyy HH:mm')" />
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+		<separator />
+		<div class="row">
+			<div class="col-md-10">
+				<paging id="paging" autohide="true" />
+			</div>
+			<div class="col-md-2" align="right">
+				<label value="Total Record :" style="font-weight: bold" />
+				<label value="@load(vm.pageTotalSize)"
+					style="font-weight: bold" />
+			</div>
+		</div>
+		<grid id="grid" emptyMessage="${labels.common.emptymsg}">
+			<columns>
+				<column label="${labels.common.no}" align="right"
+					width="40px" />
+				<column align="center" width="60px">
+					<checkbox id="chkAll"
+						onCheck="@command('doCheckedall', checked=self.checked)" />
+				</column>
+				<column label="No Paket" align="center" width="120px" />
+				<column label="Cabang" />
+				<column label="Jumlah" align="right" width="100px" />
+				<column label="Status" align="center"  />
+				<column label="Action" align="center" width="110px" />
+			</columns>
+		</grid>
+		<separator />
+		<div align="right">
+			<grid width="400px">
+				<columns>
+					<column label="Total Record Selected" align="center" />
+					<column label="Total Data Selected" align="center" />
+				</columns>
+				<rows>
+					<row>
+						<decimalbox cols="15"
+							value="@load(vm.totalselected)" format="#,###" inplace="true"
+							readonly="true" style="text-align:right" />
+						<decimalbox cols="15"
+							value="@load(vm.totaldataselected)" format="#,###" inplace="true"
+							readonly="true" style="text-align:right" />
+					</row>
+				</rows>
+				<foot>
+					<footer>
+						<button width="180px" autodisable="self"
+							label="Cetak Label" image="/images/printer_label.png"
+							sclass="btn btn-success btn-sm"
+							onClick="@command('doPrintLabel')" />
+					</footer>
+					<footer>
+						<button width="180px" autodisable="self"
+							label="Paket Done" sclass="btn btn-primary btn-sm"
+							onClick="@command('doDoneSorting')" />
+					</footer>
+				</foot>
+			</grid>
+		</div>
+		<separator />
+		<div align="right">
+			<button sclass="btn btn-danger btn-sm"
+				image="/images/close.png" tooltiptext="Close" autodisable="self"
+				onClick="@command('doClose')" />
+		</div>
+	</window>
+</zk>

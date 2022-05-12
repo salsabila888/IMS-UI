@@ -1,0 +1,27 @@
+<?page title="${desktop.webApp.appName}" contentType="text/html;charset=UTF-8"?>
+<?link rel="shortcut icon" type="image/x-icon" href="/images/app_icon.ico" ?>
+<?link rel="stylesheet" type="text/css"	href="/css/ddp.css" ?>
+<?link rel="stylesheet" type="text/css"	href="/bootstrap/v3/bootstrap/css/bootstrap.css" ?>
+<zk xmlns:w="client" xmlns:n="native">
+	<style>
+		body { background: #b9cbce url('/tms/images/header_bg.jpg');
+			background-repeat: repeat-y;
+			background-position: top center;
+		}		
+	</style>
+	<window width="500px" height="200px" border="none" position="center" mode="overlapped"
+		sclass="bgchild">
+		<script src="/bootstrap/v3/zk/js/button-bs.js" />
+
+		<div sclass="jumbotron">
+			<n:p>Sorry, you don't have access.</n:p>
+			<n:p>
+				Please log in to continue.
+				<n:a class="btn btn-primary btn-lg"
+					href="/inventory" role="button">
+					${labels.common.login}
+				</n:a>
+			</n:p>
+		</div>		
+	</window>
+</zk>
